@@ -3,170 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cognitive Media Analytics Node</title>
+    <title>NexusAI Multimodal Suite</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap">
     <style>
         body {
-            background-color: #0b0f19;
+            background-color: #070a13;
             color: #f1f5f9;
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-image: 
-                radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.1) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(124, 58, 237, 0.1) 0px, transparent 50%);
+                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.12) 0px, transparent 50%);
             min-height: 100vh;
         }
-        
-        #loadingOverlay {
+        .glass-card {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 22px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .nav-pills .nav-link {
+            color: #94a3b8;
+            border-radius: 30px;
+            padding: 10px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        .nav-pills .nav-link.active {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: #ffffff;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+        }
+        .nav-pills .nav-link:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        .upload-zone {
+            border: 2px dashed rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.01);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .upload-zone:hover {
+            border-color: #6366f1;
+            background: rgba(99, 102, 241, 0.03);
+        }
+        .data-pill {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 12px 16px;
+        }
+        #globalLoader {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(11, 15, 25, 0.95);
-            backdrop-filter: blur(8px);
+            background: rgba(7, 10, 19, 0.96);
+            backdrop-filter: blur(10px);
             z-index: 9999;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
         }
-
-        .glass-card {
-            background: rgba(17, 24, 39, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .upload-zone {
-            border: 2px dashed rgba(255, 255, 255, 0.15);
-            border-radius: 14px;
-            padding: 30px;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.02);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .upload-zone:hover {
-            border-color: #3b82f6;
-            background: rgba(59, 130, 246, 0.04);
-        }
-
-        .preview-frame {
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            max-height: 400px;
-            object-fit: contain;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-        }
-
-        .ai-tag {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(147, 51, 234, 0.15));
-            border: 1px solid rgba(147, 51, 234, 0.3);
-            color: #ca8a04;
-            color: #a7f3d0;
-            font-weight: 600;
-            padding: 8px 16px;
-            border-radius: 30px;
-            letter-spacing: 0.5px;
-            display: inline-block;
-            box-shadow: 0 4px 12px rgba(147, 51, 234, 0.1);
-        }
-
-        .glow-text {
-            text-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
-        }
     </style>
 </head>
 <body>
 
-    <div id="loadingOverlay" class="d-none">
-        <div class="spinner-border text-primary mb-4" style="width: 4rem; height: 4rem;" role="status"></div>
-        <h4 class="fw-bold tracking-wide glow-text text-primary">RUNNING NEURAL COMPUTER VISION MATRIX</h4>
-        <p class="text-muted small">Amazon Rekognition is indexing structural weights...</p>
+    <div id="globalLoader" class="d-none">
+        <div class="spinner-border text-info mb-3" style="width: 3.5rem; height: 3.5rem;" role="status"></div>
+        <h5 class="fw-bold tracking-widest text-info text-uppercase">Querying AWS Multimodal Clusters</h5>
+        <p class="text-muted small">Orchestrating AI computational matrices...</p>
     </div>
 
     <div class="container py-5">
         <div class="text-center mb-5">
-            <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill border border-primary border-opacity-20 mb-3 text-uppercase tracking-wider fw-bold">Live AWS Cluster Node</span>
-            <h1 class="fw-bold text-white tracking-tight display-5">Aether<span class="text-primary glow-text">Vision</span> Engine</h1>
-            <p class="text-muted mx-auto" style="max-width: 500px;">Containerized pipeline orchestrating deep image label extractions via AWS Rekognition AI.</p>
-        </div>
-        
-        <div class="card glass-card p-4 mb-5 mx-auto" style="max-width: 700px;">
-            <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
-                <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
-                    <div class="fs-1 mb-2">⚡</div>
-                    <h6 class="fw-semibold text-white">Select Media Asset Payload</h6>
-                    <p class="text-muted small mb-3">Supports JPG, JPEG, and PNG targets</p>
-                    <input id="fileInput" class="form-control d-none" type="file" name="file" accept=".jpg,.png,.jpeg" required onchange="updateFileNameDisplay(this)">
-                    <div id="fileTitle" class="text-primary font-monospace small mb-3 d-none"></div>
-                    <button type="submit" class="btn btn-primary px-5 py-2 fw-semibold rounded-pill shadow-sm">Compute Machine Analytics</button>
-                </div>
-            </form>
+            <span class="badge bg-info bg-opacity-10 text-info px-3 py-2 rounded-pill border border-info border-opacity-20 mb-3 text-uppercase font-monospace">Enterprise Deployment Matrix</span>
+            <h1 class="fw-bold text-white display-4">NexusAI Hub Workspace</h1>
+            <p class="text-muted mx-auto" style="max-width: 600px;">A high-performance parallel computing interface executing computer vision, entity text tracking, and biometric sentiment calculations simultaneously.</p>
         </div>
 
-        {% if filename %}
-        <div class="row g-4 justify-content-center">
+        <ul class="nav nav-pills justify-content-center gap-2 mb-5" id="pipelineTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link {% if active_tab == 'object' %}active{% endif %}" href="?tab=object">🤖 Vision Classifier</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if active_tab == 'resume' %}active{% endif %}" href="?tab=resume">📄 Text & Resume Scanner</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if active_tab == 'emotion' %}active{% endif %}" href="?tab=emotion">🎭 Biometric Sentiment</a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
             
-            <div class="col-lg-5 text-center">
-                <div class="p-4 glass-card h-100 d-flex flex-column justify-content-center align-items-center">
-                    <span class="badge bg-secondary bg-opacity-20 text-muted px-2 py-1 rounded mb-3 font-monospace small">S3_OBJECT_STREAM</span>
-                    <img src="{{ image_url }}" class="img-fluid preview-frame" alt="Active Processing Target" onerror="this.src='https://placehold.co/600x400/111827/ffffff?text=Synchronizing+Cloud+Object...'">
+            {% if active_tab == 'object' %}
+            <div class="row g-4 justify-content-center">
+                <div class="col-lg-5">
+                    <div class="card glass-card p-4 h-100">
+                        <h5 class="fw-bold text-white mb-3">Asset Entrypoint Matrix</h5>
+                        <form class="actionForm" action="/upload-object" method="POST" enctype="multipart/form-data">
+                            <div class="upload-zone text-center" onclick="document.getElementById('objFile').click()">
+                                <div class="fs-2 mb-2">📸</div>
+                                <h6 class="text-white">Upload Media Matrix</h6>
+                                <input id="objFile" type="file" class="d-none" name="file" accept="image/*" required>
+                                <button type="submit" class="btn btn-sm btn-primary mt-3 px-4 rounded-pill">Analyze Target</button>
+                            </div>
+                        </form>
+                        {% if filename %}
+                        <div class="mt-4 text-center">
+                            <img src="{{ image_url }}" class="img-fluid rounded border border-secondary border-opacity-30 style='max-height: 250px;'">
+                        </div>
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
-            
-            <div class="col-lg-6">
-                <div class="card glass-card h-100 p-4">
-                    <div class="d-flex justify-content-between align-items-center border-bottom border-secondary border-opacity-30 pb-3 mb-4">
-                        <h5 class="fw-bold text-white mb-0 d-flex align-items-center">📊 Extraction Metadata</h5>
-                        <span class="spinner-grow text-success" style="width: 10px; height: 10px;" role="status"></span>
-                    </div>
-                    
-                    <div class="row g-3 mb-4">
-                        <div class="col-sm-6">
-                            <label class="text-muted d-block small uppercase font-monospace">Registry Key</label>
-                            <span class="text-primary fw-semibold font-monospace small text-break">{{ filename }}</span>
-                        </div>
-                        <div class="col-sm-6">
-                            <label class="text-muted d-block small uppercase font-monospace">Infrastructure Sink</label>
-                            <span class="text-secondary font-monospace small">DynamoDB NoSQL</span>
-                        </div>
-                    </div>
-                    
-                    <h6 class="fw-semibold text-white mb-3 d-flex align-items-center">🧠 Verified AI Vision Identifiers</h6>
-                    <div class="d-flex flex-wrap gap-2">
-                        {% if item and item.Labels %}
-                            {% for label in item.Labels %}
-                            <div class="ai-tag font-monospace small">
-                                🛸 {{ label }}
+                <div class="col-lg-6">
+                    <div class="card glass-card p-4 h-100">
+                        <h5 class="fw-bold text-white mb-4">AWS Infrastructure S3/DynamoDB Node</h5>
+                        {% if item %}
+                            <p class="font-monospace text-primary small mb-2">Registered File: {{ filename }}</p>
+                            <div class="d-flex flex-wrap gap-2 mt-2">
+                                {% for label in item.Labels %}
+                                    <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-30 px-3 py-2 fs-6 rounded-pill">🛸 {{ label }}</span>
+                                {% endfor %}
                             </div>
-                            {% endfor %}
                         {% else %}
-                            <div class="w-100 alert alert-warning bg-warning bg-opacity-5 border border-warning border-opacity-10 text-warning py-3 small rounded-3">
-                                📡 Pipeline synchronization warning: AWS Lambda execution thread in progress. Refresh browser to fetch registry arrays.
-                            </div>
+                            <p class="text-muted small">Deliver an asset to watch the trigger chain write object tags to the database register.</p>
                         {% endif %}
                     </div>
                 </div>
             </div>
+            {% endif %}
+
+            {% if active_tab == 'resume' %}
+            <div class="row g-4 justify-content-center">
+                <div class="col-lg-5">
+                    <div class="card glass-card p-4 h-100">
+                        <h5 class="fw-bold text-white mb-3">Resume Document Engine</h5>
+                        <form class="actionForm" action="/analyze-resume" method="POST" enctype="multipart/form-data">
+                            <div class="upload-zone text-center" onclick="document.getElementById('resFile').click()">
+                                <div class="fs-2 mb-2">📄</div>
+                                <h6 class="text-white">Load Document Snapshot (Image Format)</h6>
+                                <input id="resFile" type="file" class="d-none" name="file" accept="image/*" required>
+                                <button type="submit" class="btn btn-sm btn-info mt-3 px-4 rounded-pill">Parse Intelligence</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card glass-card p-4 h-100">
+                        <h5 class="fw-bold text-white mb-3">ATS Intelligence Parsing Array</h5>
+                        {% if analysis_results %}
+                            <div class="data-pill mb-3">
+                                <small class="text-muted font-monospace d-block">Metrics Collected</small>
+                                <strong class="text-info">{{ analysis_results.total_words }} words analyzed</strong>
+                            </div>
+                            <div class="mb-3">
+                                <h6 class="text-success fw-semibold">✅ Technical Stack Matches Detected:</h6>
+                                <div class="d-flex flex-wrap gap-2">
+                                    {% for skill in analysis_results.skills_found %}
+                                        <span class="badge bg-light bg-opacity-10 text-white px-2 py-1">{{ skill }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div>
+                                <h6 class="text-warning fw-semibold">💡 Recommended Skill Optimization Nodes:</h6>
+                                <div class="d-flex flex-wrap gap-2">
+                                    {% for skill in analysis_results.skills_missing %}
+                                        <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-20 px-2 py-1">{{ skill }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <p class="text-muted small">Upload an image format of a profile summary or resume sheet to run automated computer keyword parsing.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if active_tab == 'emotion' %}
+            <div class="row g-4 justify-content-center">
+                <div class="col-lg-5">
+                    <div class="card glass-card p-4 h-100">
+                        <h5 class="fw-bold text-white mb-3">Biometric Core Interface</h5>
+                        <form class="actionForm" action="/analyze-emotion" method="POST" enctype="multipart/form-data">
+                            <div class="upload-zone text-center" onclick="document.getElementById('emoFile').click()">
+                                <div class="fs-2 mb-2">🎭</div>
+                                <h6 class="text-white">Deliver Biometric Payload Target</h6>
+                                <input id="emoFile" type="file" class="d-none" name="file" accept="image/*" required>
+                                <button type="submit" class="btn btn-sm btn-warning mt-3 px-4 rounded-pill">Read Biometric Vector</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card glass-card p-4 h-100">
+                        <h5 class="fw-bold text-white mb-3">Neural Sentiment Registry</h5>
+                        {% if analysis_results and analysis_results.count > 0 %}
+                            <p class="text-warning font-monospace small">Detected Vectors Count: {{ analysis_results.count }}</p>
+                            {% for face in analysis_results.faces %}
+                                <div class="border border-secondary border-opacity-30 rounded p-3 mb-2 bg-black bg-opacity-20">
+                                    <p class="mb-1 text-white small">🧬 **Demographic Core:** {{ face.gender }} | **Scale Allocation:** {{ face.age_range }}</p>
+                                    <p class="mb-1 text-white small">✨ **Active Expression Target:** {{ face.smile }}</p>
+                                    <div class="mt-2">
+                                        {% for emotion in face.emotions %}
+                                            <span class="badge bg-warning bg-opacity-10 text-warning me-1 font-monospace">{{ emotion }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted small">Load a biometric face capture profile mapping target to extract demographic vectors and facial sentiment expressions.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
 
         </div>
-        {% endif %}
     </div>
 
     <script>
-        document.getElementById('uploadForm').addEventListener('submit', function() {
-            document.getElementById('loadingOverlay').classList.remove('d-none');
+        // Synchronize all application submission operations behind the loader element
+        document.querySelectorAll('.actionForm').forEach(form => {
+            form.addEventListener('submit', function() {
+                document.getElementById('globalLoader').classList.remove('d-none');
+            });
         });
-
-        function updateFileNameDisplay(input) {
-            const display = document.getElementById('fileTitle');
-            if(input.files && input.files[0]) {
-                display.innerText = "Target: " + input.files[0].name;
-                display.classList.remove('d-none');
-            }
-        }
     </script>
 </body>
 </html>
