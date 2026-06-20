@@ -1,0 +1,1 @@
+In this project you just not write a simple script; you built a multi-functional, modern Enterprise AI Hub using a production-grade tech stack: AWS (S3, DynamoDB, Rekognition), Docker containerization, Bootstrap 5 frontend design
