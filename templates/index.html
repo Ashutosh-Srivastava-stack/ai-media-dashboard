@@ -84,10 +84,10 @@
         <div class="text-center mb-5">
             <span class="badge bg-info bg-opacity-10 text-info px-3 py-2 rounded-pill border border-info border-opacity-20 mb-3 text-uppercase font-monospace">Enterprise Deployment Matrix</span>
             <h1 class="fw-bold text-white display-4">NexusAI Hub Workspace</h1>
-            <p class="text-muted mx-auto" style="max-width: 600px;">A high-performance parallel computing interface executing computer vision, entity text tracking, and biometric sentiment calculations simultaneously.</p>
+            <p class="text-muted mx-auto" style="max-width: 600px;">A high-performance parallel computing interface executing computer vision, text tracking, and biometric sentiment calculations via AWS Rekognition AI.</p>
         </div>
 
-        <ul class="nav nav-pills justify-content-center gap-2 mb-5" id="pipelineTabs" role="tablist">
+        <ul class="nav nav-pills justify-content-center gap-2 mb-5" id="pipelineTabs">
             <li class="nav-item">
                 <a class="nav-link {% if active_tab == 'object' %}active{% endif %}" href="?tab=object">🤖 Vision Classifier</a>
             </li>
@@ -106,7 +106,8 @@
                 <div class="col-lg-5">
                     <div class="card glass-card p-4 h-100">
                         <h5 class="fw-bold text-white mb-3">Asset Entrypoint Matrix</h5>
-                        <form class="actionForm" action="/upload-object" method="POST" enctype="multipart/form-data">
+                        <form class="actionForm" action="/" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="form_type" value="object">
                             <div class="upload-zone text-center" onclick="document.getElementById('objFile').click()">
                                 <div class="fs-2 mb-2">📸</div>
                                 <h6 class="text-white">Upload Media Matrix</h6>
@@ -114,9 +115,9 @@
                                 <button type="submit" class="btn btn-sm btn-primary mt-3 px-4 rounded-pill">Analyze Target</button>
                             </div>
                         </form>
-                        {% if filename %}
+                        {% if image_url and active_tab == 'object' %}
                         <div class="mt-4 text-center">
-                            <img src="{{ image_url }}" class="img-fluid rounded border border-secondary border-opacity-30 style='max-height: 250px;'">
+                            <img src="{{ image_url }}" class="img-fluid rounded border border-secondary border-opacity-30" style="max-height: 250px;">
                         </div>
                         {% endif %}
                     </div>
@@ -132,7 +133,7 @@
                                 {% endfor %}
                             </div>
                         {% else %}
-                            <p class="text-muted small">Deliver an asset to watch the trigger chain write object tags to the database register.</p>
+                            <p class="text-muted small">Upload an image to trigger the pipeline and watch the S3/Lambda chain populate DynamoDB labels.</p>
                         {% endif %}
                     </div>
                 </div>
@@ -144,14 +145,20 @@
                 <div class="col-lg-5">
                     <div class="card glass-card p-4 h-100">
                         <h5 class="fw-bold text-white mb-3">Resume Document Engine</h5>
-                        <form class="actionForm" action="/analyze-resume" method="POST" enctype="multipart/form-data">
+                        <form class="actionForm" action="/" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="form_type" value="resume">
                             <div class="upload-zone text-center" onclick="document.getElementById('resFile').click()">
                                 <div class="fs-2 mb-2">📄</div>
-                                <h6 class="text-white">Load Document Snapshot (Image Format)</h6>
+                                <h6 class="text-white">Upload Resume Snapshot</h6>
                                 <input id="resFile" type="file" class="d-none" name="file" accept="image/*" required>
-                                <button type="submit" class="btn btn-sm btn-info mt-3 px-4 rounded-pill">Parse Intelligence</button>
+                                <button type="submit" class="btn btn-sm btn-info mt-3 px-4 rounded-pill">Parse ATS</button>
                             </div>
                         </form>
+                        {% if image_url and active_tab == 'resume' %}
+                        <div class="mt-4 text-center">
+                            <img src="{{ image_url }}" class="img-fluid rounded border border-info border-opacity-20" style="max-height: 250px;">
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -163,7 +170,7 @@
                                 <strong class="text-info">{{ analysis_results.total_words }} words analyzed</strong>
                             </div>
                             <div class="mb-3">
-                                <h6 class="text-success fw-semibold">✅ Technical Stack Matches Detected:</h6>
+                                <h6 class="text-success fw-semibold">✅ Skills Detected:</h6>
                                 <div class="d-flex flex-wrap gap-2">
                                     {% for skill in analysis_results.skills_found %}
                                         <span class="badge bg-light bg-opacity-10 text-white px-2 py-1">{{ skill }}</span>
@@ -171,7 +178,7 @@
                                 </div>
                             </div>
                             <div>
-                                <h6 class="text-warning fw-semibold">💡 Recommended Skill Optimization Nodes:</h6>
+                                <h6 class="text-warning fw-semibold">💡 Recommended Skills:</h6>
                                 <div class="d-flex flex-wrap gap-2">
                                     {% for skill in analysis_results.skills_missing %}
                                         <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-20 px-2 py-1">{{ skill }}</span>
@@ -179,7 +186,7 @@
                                 </div>
                             </div>
                         {% else %}
-                            <p class="text-muted small">Upload an image format of a profile summary or resume sheet to run automated computer keyword parsing.</p>
+                            <p class="text-muted small">Upload an image format of a resume or profile sheet to parse keywords automatically.</p>
                         {% endif %}
                     </div>
                 </div>
@@ -191,14 +198,20 @@
                 <div class="col-lg-5">
                     <div class="card glass-card p-4 h-100">
                         <h5 class="fw-bold text-white mb-3">Biometric Core Interface</h5>
-                        <form class="actionForm" action="/analyze-emotion" method="POST" enctype="multipart/form-data">
+                        <form class="actionForm" action="/" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="form_type" value="emotion">
                             <div class="upload-zone text-center" onclick="document.getElementById('emoFile').click()">
                                 <div class="fs-2 mb-2">🎭</div>
-                                <h6 class="text-white">Deliver Biometric Payload Target</h6>
+                                <h6 class="text-white">Upload Face Target</h6>
                                 <input id="emoFile" type="file" class="d-none" name="file" accept="image/*" required>
-                                <button type="submit" class="btn btn-sm btn-warning mt-3 px-4 rounded-pill">Read Biometric Vector</button>
+                                <button type="submit" class="btn btn-sm btn-warning mt-3 px-4 rounded-pill">Analyze Biometrics</button>
                             </div>
                         </form>
+                        {% if image_url and active_tab == 'emotion' %}
+                        <div class="mt-4 text-center">
+                            <img src="{{ image_url }}" class="img-fluid rounded border border-warning border-opacity-20" style="max-height: 250px;">
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -208,8 +221,8 @@
                             <p class="text-warning font-monospace small">Detected Vectors Count: {{ analysis_results.count }}</p>
                             {% for face in analysis_results.faces %}
                                 <div class="border border-secondary border-opacity-30 rounded p-3 mb-2 bg-black bg-opacity-20">
-                                    <p class="mb-1 text-white small">🧬 **Demographic Core:** {{ face.gender }} | **Scale Allocation:** {{ face.age_range }}</p>
-                                    <p class="mb-1 text-white small">✨ **Active Expression Target:** {{ face.smile }}</p>
+                                    <p class="mb-1 text-white small">🧬 **Demographics:** {{ face.gender }} | Age Range: {{ face.age_range }}</p>
+                                    <p class="mb-1 text-white small">✨ **Smiling:** {{ face.smile }}</p>
                                     <div class="mt-2">
                                         {% for emotion in face.emotions %}
                                             <span class="badge bg-warning bg-opacity-10 text-warning me-1 font-monospace">{{ emotion }}</span>
@@ -218,7 +231,7 @@
                                 </div>
                             {% endfor %}
                         {% else %}
-                            <p class="text-muted small">Load a biometric face capture profile mapping target to extract demographic vectors and facial sentiment expressions.</p>
+                            <p class="text-muted small">Load a face picture target to instantly calculate demographic vectors and emotional expressions.</p>
                         {% endif %}
                     </div>
                 </div>
@@ -229,7 +242,7 @@
     </div>
 
     <script>
-        // Synchronize all application submission operations behind the loader element
+        // Bind the loading screen effect to all active forms
         document.querySelectorAll('.actionForm').forEach(form => {
             form.addEventListener('submit', function() {
                 document.getElementById('globalLoader').classList.remove('d-none');
