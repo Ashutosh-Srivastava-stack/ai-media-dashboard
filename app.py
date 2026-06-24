@@ -6,9 +6,9 @@ import base64
 app = Flask(__name__)
 
 # SYSTEM INFRASTRUCTURE SINK LINKS
-BUCKET_NAME = 'ai-media-uploads-ashutosh-123'
-TABLE_NAME = 'ImageMetadataTable'
-REGION_NAME = 'ap-southeast-2'
+BUCKET_NAME = 'YOUR-BUCKET-NAME'
+TABLE_NAME = 'YOUR-TABLE-NAME'
+REGION_NAME = 'YOUR-REGION-NAME'
 
 s3 = boto3.client('s3', region_name=REGION_NAME)
 rekognition = boto3.client('rekognition', region_name=REGION_NAME)
@@ -54,7 +54,7 @@ def index():
                     extracted_words = [text['DetectedText'] for text in response['TextDetections'] if text['Type'] == 'WORD']
                     
                     full_text = " ".join(extracted_words).lower()
-                    tech_keywords = ['python', 'java', 'javascript', 'aws', 'docker', 'flask', 'sql', 'html', 'css', 'react', 'cloud']
+                    tech_keywords = ['python', 'java', 'javascript', 'aws', 'docker', 'flask', 'sql', 'html', 'css', 'react', 'cloud', 'ai-ml']
                     found_skills = [skill.upper() for skill in tech_keywords if skill in full_text]
                     missing_skills = [skill.upper() for skill in tech_keywords if skill not in full_text]
                     
