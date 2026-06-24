@@ -5,8 +5,7 @@ A high-performance, containerized enterprise cloud dashboard that leverages para
 🌟 Key Architecture & Features
 🤖 Vision Classifier Module: Uploads media directly to an Amazon S3 bucket, which instantly triggers an asynchronous event loop via an AWS Lambda function. The object classifications are then logged systematically inside a remote Amazon DynamoDB database register.
 
-📄 Text & Resume Scanner (ATS Engine): Utilizes Amazon Rekognition Text Detection matrices to scan uploaded resume images, extract raw strings, analyze tech stack keywords, and dynamically generate immediate skills alignment optimization checklists.
-
+📄 Text & Resume Scanner (ATS Engine): Utilizes Amazon Rekognition Text Detection matrices to scan uploaded resume images and extract raw strings globally. The algorithm parses the entire document without text length restrictions, dynamically cross-referencing tech stack keywords against full-length profiles to generate real-time skills alignment optimization checklists.
 🎭 Biometric Sentiment Core: Harnesses facial detection arrays from Amazon Rekognition to read gender metrics, compute age range distributions, identify expressions (e.g., smile detection), and map key neural emotional confidence states in real time.
 
 ⚡ Modern Glassmorphism UI Layout: Built using modern Bootstrap 5 styling variables with fluid tab state routing, intuitive upload target frames, micro-interaction loader animations, and high-fidelity native image previews across all operational modes.

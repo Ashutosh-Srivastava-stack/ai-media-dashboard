@@ -49,20 +49,23 @@ def index():
                 active_tab = 'resume'
                 try:
                     response = rekognition.detect_text(Image={'Bytes': image_bytes})
+                    
+                    # Gather ALL extracted words without any slicing limits
                     extracted_words = [text['DetectedText'] for text in response['TextDetections'] if text['Type'] == 'WORD']
+                    
                     full_text = " ".join(extracted_words).lower()
                     tech_keywords = ['python', 'java', 'javascript', 'aws', 'docker', 'flask', 'sql', 'html', 'css', 'react', 'cloud']
                     found_skills = [skill.upper() for skill in tech_keywords if skill in full_text]
                     missing_skills = [skill.upper() for skill in tech_keywords if skill not in full_text]
+                    
                     analysis_results = {
-                        "total_words": len(extracted_words),
+                        "total_words": len(extracted_words),  # This will now display the true total word count
                         "skills_found": found_skills if found_skills else ["None Detected"],
                         "skills_missing": missing_skills[:4],
-                        "raw_text_preview": " ".join(extracted_words[:40]) + "..."
+                        "raw_text_preview": " ".join(extracted_words[:40]) + "..." if extracted_words else "Empty Document"
                     }
                 except Exception as e:
                     return f"Text Analyzer Fault: {str(e)}", 500
-
             # --- MODULE 3: EMOTION SENTIMENT ENGINE ---
             elif form_type == 'emotion':
                 active_tab = 'emotion'
